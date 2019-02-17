@@ -722,6 +722,10 @@ public:
 	int getPEAK_SEE_FROM_CHANGE();
 	int getHILLS_SEE_FROM_CHANGE();
 	int getUSE_SPIES_NO_ENTER_BORDERS();
+	//MOD@CombatXPFromBarbs-start1/2
+	inline int getXP_FROM_BARBARIAN() { return m_iXP_FROM_BARBARIAN; }
+	//MOD@CombatXPFromBarbs-end1/2
+
 
 	DllExport float getCAMERA_MIN_YAW();
 	DllExport float getCAMERA_MAX_YAW();
@@ -1141,6 +1145,9 @@ protected:
 	int m_iPEAK_SEE_FROM_CHANGE;
 	int m_iHILLS_SEE_FROM_CHANGE;
 	int m_iUSE_SPIES_NO_ENTER_BORDERS;
+	//MOD@CombatXPFromBarbs-start2/2
+	int m_iXP_FROM_BARBARIAN;
+	//MOD@CombatXPFromBarbs-end2/2			
 
 	float m_fCAMERA_MIN_YAW;
 	float m_fCAMERA_MAX_YAW;

@@ -2657,9 +2657,6 @@ void CvPlayer::doTurn()
 void CvPlayer::doTurnUnits()
 {
 	PROFILE_FUNC();
-	//VINCENTZ TODO INSERT START GOLD BEFORE HEALING
-
-	int goldbefore = getGold();
 
 	CvSelectionGroup* pLoopSelectionGroup;
 	int iLoop;
@@ -2710,20 +2707,6 @@ void CvPlayer::doTurnUnits()
 				}
 				break;
 			}
-		}
-
-
-		//swprintf(szBuffer, gDLL->getText("TXT_KEY_MISC_DESTROYED_CITY", pCity->getNameKey()).GetCString());
-		//gDLL->getInterfaceIFace()->addMessage(getID(), true, GC.getEVENT_MESSAGE_TIME(), szBuffer, "AS2D_CITYRAZE", MESSAGE_TYPE_MAJOR_EVENT, ARTFILEMGR.getInterfaceArtInfo("WORLDBUILDER_CITY_EDIT")->getPath(), (ColorTypes)GC.getInfoTypeForString("COLOR_GREEN"), pCity->getX_INLINE(), pCity->getY_INLINE(), true, true);
-
-
-		int UsedGold = goldbefore - getGold();
-		if (getID() == GC.getGameINLINE().getActivePlayer() && UsedGold != 0)
-		{
-			//TODO INSERT GOLD
-			gDLL->getInterfaceIFace()->addMessage(getID(), false, GC.getEVENT_MESSAGE_TIME(), gDLL->getText("TXT_KEY_MISC_GOLD_SPEND_HEALNG", UsedGold).GetCString(), "AS2D_PLAGUE", MESSAGE_TYPE_MINOR_EVENT, NULL, (ColorTypes)GC.getInfoTypeForString("COLOR_WARNING_TEXT"));
-
-			gDLL->getInterfaceIFace()->setDirty(GameData_DIRTY_BIT, true);
 		}
 	}
 
@@ -9509,10 +9492,7 @@ void CvPlayer::setCombatExperience(int iExperience)
 	{
 		m_iCombatExperience = iExperience;
 
-		//MOD@CombatXPFromBarbs-start1/1
-		//Original code: if (!isBarbarian())
-		if ((GC.getXP_FROM_BARBARIAN() > 1) || !isBarbarian())
-		//MOD@CombatXPFromBarbs-end1/1
+		if (!isBarbarian())
 		{
 			int iExperienceThreshold = greatPeopleThreshold(true);
 			if (m_iCombatExperience >= iExperienceThreshold && iExperienceThreshold > 0)

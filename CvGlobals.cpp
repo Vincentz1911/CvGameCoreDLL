@@ -212,6 +212,9 @@ m_iUSE_ON_UNIT_SELECTED_CALLBACK(0),
 m_iUSE_ON_UPDATE_CALLBACK(0),
 m_iUSE_ON_UNIT_CREATED_CALLBACK(0),
 m_iUSE_ON_UNIT_LOST_CALLBACK(0),
+//MOD@CombatXPFromBarbs-start1/2
+m_iXP_FROM_BARBARIAN(0),
+//MOD@CombatXPFromBarbs-end1/2		
 m_paHints(NULL),
 m_paMainMenus(NULL)
 {
@@ -2621,7 +2624,12 @@ void CvGlobals::cacheGlobals()
 	m_iPEAK_SEE_FROM_CHANGE = getDefineINT("PEAK_SEE_FROM_CHANGE");
 	m_iHILLS_SEE_FROM_CHANGE = getDefineINT("HILLS_SEE_FROM_CHANGE");
 	m_iUSE_SPIES_NO_ENTER_BORDERS = getDefineINT("USE_SPIES_NO_ENTER_BORDERS");
-	
+	//MOD@CombatXPFromBarbs-start2/2
+	m_iXP_FROM_BARBARIAN = getDefineINT("XP_FROM_BARBARIAN");
+	//MOD@CombatXPFromBarbs-end2/2										
+
+
+
 	m_fCAMERA_MIN_YAW = getDefineFLOAT("CAMERA_MIN_YAW");
 	m_fCAMERA_MAX_YAW = getDefineFLOAT("CAMERA_MAX_YAW");
 	m_fCAMERA_FAR_CLIP_Z_HEIGHT = getDefineFLOAT("CAMERA_FAR_CLIP_Z_HEIGHT");
