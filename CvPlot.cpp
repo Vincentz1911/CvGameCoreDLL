@@ -2775,7 +2775,15 @@ int CvPlot::movementCost(const CvUnit* pUnit, const CvPlot* pFromPlot) const
 	}
 	else
 	{
-		iRegularCost = ((getFeatureType() == NO_FEATURE) ? GC.getTerrainInfo(getTerrainType()).getMovementCost() : GC.getFeatureInfo(getFeatureType()).getMovementCost());
+		//VINCENTZ FEATURE MOVE POIINTS
+		//		iRegularCost = ((getFeatureType() == NO_FEATURE) ? GC.getTerrainInfo(getTerrainType()).getMovementCost() : GC.getFeatureInfo(getFeatureType()).getMovementCost());
+		iRegularCost =  GC.getTerrainInfo(getTerrainType()).getMovementCost();
+
+		if (getFeatureType() != NO_FEATURE)
+		{ 
+			iRegularCost += GC.getFeatureInfo(getFeatureType()).getMovementCost();
+		}
+		//VINCENTZ FEATURE MOVE POIINTS END
 
 		if (isHills())
 		{
