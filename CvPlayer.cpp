@@ -5272,6 +5272,11 @@ bool CvPlayer::canTrain(UnitTypes eUnit, bool bContinue, bool bTestVisible, bool
 	FAssert(GC.getCivilizationInfo(getCivilizationType()).getCivilizationUnits(eUnitClass) == eUnit);
 	if (GC.getCivilizationInfo(getCivilizationType()).getCivilizationUnits(eUnitClass) != eUnit)
 	{
+		CvWString szTemp;
+		szTemp.Format(L"%s", GC.getUnitInfo(eUnit).getDescription());
+		CvWString szTemp2;
+		szTemp2.Format(L"%s", GC.getCivilizationInfo(getCivilizationType()).getCivilizationUnits(eUnitClass));
+
 		return false;
 	}
 
@@ -5386,6 +5391,7 @@ bool CvPlayer::canConstruct(BuildingTypes eBuilding, bool bContinue, bool bTestV
 	FAssert(GC.getCivilizationInfo(getCivilizationType()).getCivilizationBuildings(eBuildingClass) == eBuilding);
 	if (GC.getCivilizationInfo(getCivilizationType()).getCivilizationBuildings(eBuildingClass) != eBuilding)
 	{
+		//VINCETEST
 		CvWString szTemp;
 		szTemp.Format(L"%s", GC.getBuildingInfo(eBuilding).getDescription());
 		CvWString szTemp2;
