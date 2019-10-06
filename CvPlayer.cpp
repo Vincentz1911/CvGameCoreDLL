@@ -13147,7 +13147,11 @@ int CvPlayer::getEspionageMissionBaseCost(EspionageMissionTypes eMission, Player
 			{
 				if (canStealTech(eTargetPlayer, (TechTypes)iTech))
 				{
-					int iCost = GET_TEAM(getTeam()).getResearchCost((TechTypes)iTech);
+					//Vincentz StealTech
+					//int iCost = GET_TEAM(getTeam()).getResearchCost((TechTypes)iTech);
+					int iCost = GET_TEAM(getTeam()).getResearchCost((TechTypes)iTech) - 
+						GET_TEAM(getTeam()).getResearchProgress((TechTypes)iTech);
+					
 					if (iCost < iProdCost)
 					{
 						iProdCost = iCost;
@@ -13158,7 +13162,10 @@ int CvPlayer::getEspionageMissionBaseCost(EspionageMissionTypes eMission, Player
 		}
 		else
 		{
-			iProdCost = GET_TEAM(getTeam()).getResearchCost(eTech);
+			//Vincentz StealTech
+			//iProdCost = GET_TEAM(getTeam()).getResearchCost(eTech);
+			iProdCost = GET_TEAM(getTeam()).getResearchCost((TechTypes)eTech) -
+				GET_TEAM(getTeam()).getResearchProgress((TechTypes)eTech);
 		}
 
 		if (NO_TECH != eTech)
