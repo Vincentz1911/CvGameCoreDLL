@@ -7556,7 +7556,10 @@ void CvUnit::upgrade(UnitTypes eUnit)
 			//Vincentz Upgrade softcap
 			//			pUpgradeUnit->setExperience(((pUpgradeUnit->getExperience() - GC.getDefineINT("MAX_EXPERIENCE_AFTER_UPGRADE")) / 2) + GC.getDefineINT("MAX_EXPERIENCE_AFTER_UPGRADE"));
 
-			pUpgradeUnit->setExperience((pUpgradeUnit->getExperience() - MaxXPEra / 2) + MaxXPEra);
+			// 20xp - 15era = 5 over and should be devided with 2 plus era
+			// 15 + 2.5 = 17.5
+			// Era + (XP - ERA) / 2 
+			pUpgradeUnit->setExperience((pUpgradeUnit->getExperience() - MaxXPEra) / 2 + MaxXPEra);
 			//pUpgradeUnit->setExperience(GC.getDefineINT("MAX_EXPERIENCE_AFTER_UPGRADE"));
 			//getCurrentEra()
 
@@ -12748,8 +12751,10 @@ bool CvUnit::rangeStrike(int iX, int iY)
 			}
 		}
 
-		if (pDefender != NULL)
+		if (pDefender != NULL && pDefender-> movesLeft() > GC.getMOVE_DENOMINATOR())
 		{
+			pDefender->changeMoves(GC.getMOVE_DENOMINATOR());
+
 			iDamage = rangeCombatDamage(this) * pDefender->currHitPoints() / pDefender->maxHitPoints();
 			iUnitDamage = std::max(this->getDamage(), std::min((this->getDamage() + iDamage), pDefender->airCombatLimit()));
 

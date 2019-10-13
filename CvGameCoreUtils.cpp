@@ -822,11 +822,17 @@ int getEspionageModifier(TeamTypes eOurTeam, TeamTypes eTargetTeam)
 	FAssert(eOurTeam != BARBARIAN_TEAM);
 	FAssert(eTargetTeam != BARBARIAN_TEAM);
 
-	int iTargetPoints = GET_TEAM(eTargetTeam).getEspionagePointsEver();
-	int iOurPoints = GET_TEAM(eOurTeam).getEspionagePointsEver();
+	//Vincentz NewSpy cost modifier
+	//int iTargetPoints = GET_TEAM(eTargetTeam).getEspionagePointsEver();
+	//int iOurPoints = GET_TEAM(eOurTeam).getEspionagePointsEver();
+	//int iModifier = GC.getDefineINT("ESPIONAGE_SPENDING_MULTIPLIER") * (2 * iTargetPoints + iOurPoints);
+	//iModifier /= std::max(1, iTargetPoints + 2 * iOurPoints);
 
-	int iModifier = GC.getDefineINT("ESPIONAGE_SPENDING_MULTIPLIER") * (2 * iTargetPoints + iOurPoints);
+	int iTargetPoints = std::max(1, GET_TEAM(eTargetTeam).getEspionagePointsAgainstTeam(eOurTeam));
+	int iOurPoints = std::max(1, GET_TEAM(eOurTeam).getEspionagePointsAgainstTeam(eTargetTeam));
+	int iModifier = GC.getDefineINT("ESPIONAGE_SPENDING_MULTIPLIER") * std::max(1, (2 * iTargetPoints + iOurPoints));
 	iModifier /= std::max(1, iTargetPoints + 2 * iOurPoints);
+
 	return iModifier;
 }
 

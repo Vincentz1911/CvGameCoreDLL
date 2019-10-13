@@ -13039,7 +13039,7 @@ bool CvPlayer::canDoEspionageMission(EspionageMissionTypes eMission, PlayerTypes
 	}
 
 	int iCost = getEspionageMissionCost(eMission, eTargetPlayer, pPlot, iExtraData, pUnit);
-	if (iCost < 0)
+	if (iCost <= 0)
 	{
 		return false;
 	}
@@ -13048,7 +13048,10 @@ bool CvPlayer::canDoEspionageMission(EspionageMissionTypes eMission, PlayerTypes
 	{
 		//Vincentz NewSpy
 		//		int iEspionagePoints = GET_TEAM(getTeam()).getEspionagePointsAgainstTeam(GET_PLAYER(eTargetPlayer).getTeam());
-		int iEspionagePoints = GET_TEAM(getTeam()).getEspionagePointsEver();;
+		int iEspionagePoints = 0;
+		if (kMission.isPassive()) 
+			iEspionagePoints = GET_TEAM(getTeam()).getEspionagePointsAgainstTeam(GET_PLAYER(eTargetPlayer).getTeam());		
+		else iEspionagePoints = GET_TEAM(getTeam()).getEspionagePointsEver();
 
 		if (iEspionagePoints < iCost)
 		{
@@ -13111,6 +13114,8 @@ int CvPlayer::getEspionageMissionBaseCost(EspionageMissionTypes eMission, Player
 			return -1;
 		}
 	}
+
+
 
 	if (NULL == pCity && kMission.isTargetsCity())
 	{
@@ -13583,9 +13588,14 @@ int CvPlayer::getEspionageMissionCostModifier(EspionageMissionTypes eMission, Pl
 	}
 
 	// My points VS. Your points to mod cost
-	int iTargetPoints = GET_TEAM(GET_PLAYER(eTargetPlayer).getTeam()).getEspionagePointsEver();
-	int iOurPoints = GET_TEAM(getTeam()).getEspionagePointsEver();
-	iModifier *= (GC.getDefineINT("ESPIONAGE_SPENDING_MULTIPLIER") * (2 * iTargetPoints + iOurPoints)) / std::max(1, iTargetPoints + 2 * iOurPoints);
+
+	//Vincentz Spy Get modifier against team
+	//int iTargetPoints = GET_TEAM(GET_PLAYER(eTargetPlayer).getTeam()).getEspionagePointsEver();
+	//int iOurPoints = GET_TEAM(getTeam()).getEspionagePointsEver();
+	int iTargetPoints = GET_TEAM(GET_PLAYER(eTargetPlayer).getTeam()).getEspionagePointsAgainstTeam(getTeam());
+	int iOurPoints = std::max(1, GET_TEAM(getTeam()).getEspionagePointsAgainstTeam(GET_PLAYER(eTargetPlayer).getTeam()));
+
+	iModifier *= (GC.getDefineINT("ESPIONAGE_SPENDING_MULTIPLIER") * std::max(1, (2 * iTargetPoints + iOurPoints))) / std::max(1, iTargetPoints + 2 * iOurPoints);
 	iModifier /= 100;
 
 	// Counterespionage Mission Mod
@@ -13886,7 +13896,8 @@ bool CvPlayer::doEspionageMission(EspionageMissionTypes eMission, PlayerTypes eT
 	{
 		if (NO_PLAYER != eTargetPlayer)
 		{
-			int iNumTotalGold = (GET_PLAYER(eTargetPlayer).getGold() * kMission.getStealTreasuryTypes()) / 100;
+			//Vincentz NewSpy (/100 to /10)
+			int iNumTotalGold = (GET_PLAYER(eTargetPlayer).getGold() * kMission.getStealTreasuryTypes()) / 10;
 
 			if (NULL != pPlot)
 			{
@@ -13993,11 +14004,13 @@ bool CvPlayer::doEspionageMission(EspionageMissionTypes eMission, PlayerTypes eT
 	if (NO_TEAM != eTargetTeam)
 	{
 		// Vincentz NewSpy
-		//		iHave = GET_TEAM(getTeam()).getEspionagePointsAgainstTeam(eTargetTeam);
+		iHave = GET_TEAM(getTeam()).getEspionagePointsAgainstTeam(eTargetTeam);
 		iHave = GET_TEAM(getTeam()).getEspionagePointsEver();
 		if (bSomethingHappened)
 		{
-			//			GET_TEAM(getTeam()).changeEspionagePointsAgainstTeam(eTargetTeam, -iMissionCost);
+			GET_TEAM(getTeam()).changeEspionagePointsAgainstTeam(eTargetTeam, -iMissionCost);
+			if (GET_TEAM(getTeam()).getEspionagePointsAgainstTeam(eTargetTeam) < 0)
+				GET_TEAM(getTeam()).setEspionagePointsAgainstTeam(eTargetTeam, 0);
 			GET_TEAM(getTeam()).changeEspionagePointsEver(-iMissionCost);
 		}
 	}
