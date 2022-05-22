@@ -12490,9 +12490,17 @@ bool CvUnit::airStrike(CvPlot* pPlot)
 
 	int iDamage = airCombatDamage(pDefender);
 
-	// < Air Combat Experience Start >
-	int iUnitDamage = pDefender->getDamage() + iDamage; //std::max(pDefender->getDamage(), std::min((pDefender->getDamage() + iDamage), airCombatLimit()));
-	// < Air Combat Experience End   >
+
+	int iEnemyDice = (GC.getGameINLINE().getSorenRandNum(GC.getDefineINT("RANGESTRIKE_DICE"), "Random"));
+	int iAttackerDice = (GC.getGameINLINE().getSorenRandNum(GC.getDefineINT("RANGESTRIKE_DICE"), "Random"));
+	int iUnitDamage = 0;
+	if ((iAttackerDice + airBaseCombatStr() * GC.getDefineINT("RANGESTRIKE_HIT_MODIFIER") * currHitPoints() / maxHitPoints()) < (iEnemyDice + pDefender->baseCombatStr() * pDefender->currHitPoints() / pDefender->maxHitPoints()))
+	{
+		// < Air Combat Experience Start >
+		iUnitDamage = pDefender->getDamage() + iDamage; //std::max(pDefender->getDamage(), std::min((pDefender->getDamage() + iDamage), airCombatLimit()));
+		// < Air Combat Experience End   >
+	}
+
 
 	CvWString szBuffer = gDLL->getText("TXT_KEY_MISC_YOU_ARE_ATTACKED_BY_AIR", pDefender->getNameKey(), getNameKey(), -(((iUnitDamage - pDefender->getDamage()) * 100) / pDefender->maxHitPoints()));
 	gDLL->getInterfaceIFace()->addMessage(pDefender->getOwnerINLINE(), false, GC.getEVENT_MESSAGE_TIME(), szBuffer, "AS2D_AIR_ATTACK", MESSAGE_TYPE_INFO, getButton(), (ColorTypes)GC.getInfoTypeForString("COLOR_RED"), pPlot->getX_INLINE(), pPlot->getY_INLINE(), true, true);
@@ -12751,7 +12759,7 @@ bool CvUnit::rangeStrike(int iX, int iY)
 			}
 		}
 
-		if (pDefender != NULL && pDefender-> movesLeft() > GC.getMOVE_DENOMINATOR())
+		if (pDefender != NULL && pDefender-> movesLeft() >= GC.getMOVE_DENOMINATOR())
 		{
 			pDefender->changeMoves(GC.getMOVE_DENOMINATOR());
 

@@ -7929,7 +7929,9 @@ void CvPlayer::changeGoldenAgeTurns(int iChange)
 int CvPlayer::getGoldenAgeLength() const
 {
 	// Vincentz Extra Random Goldenage
-	return (((GC.getGameINLINE().getSorenRandNum((GC.getGameINLINE().goldenAgeLength() * std::max(0, 100 + getGoldenAgeModifier())) / 100, "Some Log Message")) / 2) + (((GC.getGameINLINE().goldenAgeLength() * std::max(0, 100 + getGoldenAgeModifier())) / 100) / 2));
+	return (((GC.getGameINLINE().getSorenRandNum((GC.getGameINLINE().goldenAgeLength() 
+		* std::max(0, 100 + getGoldenAgeModifier())) / 100, "Some Log Message")) / 2) 
+		+ (((GC.getGameINLINE().goldenAgeLength() * std::max(0, 100 + getGoldenAgeModifier())) / 100) / 2));
 }
 
 int CvPlayer::getNumUnitGoldenAges() const
