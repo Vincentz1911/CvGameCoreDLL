@@ -2,7 +2,7 @@
 #include"CvEnums.h"
 
 #include "CvGameCoreDLLUnDefNew.h"
-# include <boost/python/enum.hpp>
+#include <boost/python/enum.hpp>
 #include "CvGameCoreDLLDefNew.h"
 
 //
@@ -544,6 +544,8 @@ void CyEnumsPythonInterface()
 
 //Vincentz healing cost gold
 		.value("GAMEOPTION_HEALING_COST_GOLD", GAMEOPTION_HEALING_COST_GOLD)
+//Vincentz War Before Writing
+		.value("GAMEOPTION_WAR_BEFORE_WRITING", GAMEOPTION_WAR_BEFORE_WRITING)
 
 		.value("NUM_GAMEOPTION_TYPES", NUM_GAMEOPTION_TYPES)
 		;

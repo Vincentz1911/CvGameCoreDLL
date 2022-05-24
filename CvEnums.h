@@ -749,7 +749,7 @@ enum GameOptionTypes				// Exposed to Python
 
 //Vincentz Healing Cost gold
 	GAMEOPTION_HEALING_COST_GOLD,
-
+	GAMEOPTION_WAR_BEFORE_WRITING,
 
 #ifdef _USRDLL
 	NUM_GAMEOPTION_TYPES

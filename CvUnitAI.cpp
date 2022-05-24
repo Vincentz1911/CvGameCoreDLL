@@ -8294,7 +8294,7 @@ bool CvUnitAI::AI_heal(int iDamagePercent, int iMaxPath)
 		}
 //Vincentz Heal
 //		else if (healRate(plot()) > 10)
-		else if ((healRate(plot())*5) >= ((currHitPoints() * 100) / maxHitPoints()))
+		else if (healRate(plot()) > 20 && (healRate(plot())*5) >= ((currHitPoints() * 100) / maxHitPoints()))
 	    {
             pGroup->pushMission(MISSION_HEAL);
             return true;

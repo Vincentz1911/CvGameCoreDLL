@@ -3591,6 +3591,22 @@ int CvPlayer::countPotentialForeignTradeCitiesConnected() const
 
 bool CvPlayer::canContact(PlayerTypes ePlayer) const
 {
+	//int iI;
+	//for (iI = 0; iI < GC.getNumTechInfos(); iI++)
+	//{
+
+	//}
+	//Vincentz Peace after Writing START
+
+	if (GC.getGameINLINE().isOption(GAMEOPTION_WAR_BEFORE_WRITING)) 
+	{
+		if (!GET_TEAM(getTeam()).isOpenBordersTrading() || !GET_TEAM(GET_PLAYER(ePlayer).getTeam()).isOpenBordersTrading())
+		{
+			return false;
+		}
+	}
+	//Vincentz Peace after Writing END
+
 	if (ePlayer == getID())
 	{
 		return false;

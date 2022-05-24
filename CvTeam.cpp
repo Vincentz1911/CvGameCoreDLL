@@ -3326,7 +3326,15 @@ void CvTeam::makeHasMet(TeamTypes eIndex, bool bNewDiplo)
 
 //Vincentz Techshare
 //		updateTechShare();
-
+		// Vincentz Peace At Writing START
+		if (GC.getGameINLINE().isOption(GAMEOPTION_WAR_BEFORE_WRITING) && getID() != eIndex)
+		{
+			if (!isOpenBordersTrading() || !GET_TEAM(eIndex).isOpenBordersTrading())
+			{
+				declareWar(eIndex, false, NO_WARPLAN);
+			}
+		}	
+		// Vincentz Peace At Writing END
 		if (GET_TEAM(eIndex).isHuman())
 		{
 			for (iI = 0; iI < MAX_PLAYERS; iI++)

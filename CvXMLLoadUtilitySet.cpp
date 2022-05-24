@@ -274,6 +274,12 @@ bool CvXMLLoadUtility::SetPostGlobalsGlobalDefines()
 		idx = FindInInfoClass(szVal);
 		GC.getDefinesVarSystem()->SetValue("NUKE_FEATURE", idx);
 
+		//Vincentz pollution
+		SetGlobalDefine("POLL_FEATURE", szVal);
+		idx = FindInInfoClass(szVal);
+		GC.getDefinesVarSystem()->SetValue("POLL_FEATURE", idx);
+		//Vincentz pollution END
+
 		SetGlobalDefine("GLOBAL_WARMING_TERRAIN", szVal);
 		idx = FindInInfoClass(szVal);
 		GC.getDefinesVarSystem()->SetValue("GLOBAL_WARMING_TERRAIN", idx);

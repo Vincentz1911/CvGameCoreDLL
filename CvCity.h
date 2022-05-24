@@ -1196,6 +1196,8 @@ protected:
 	void doDecay();
 	void doReligion();
 	void doGreatPeople();
+	void doPollution();
+	int getTotalYieldScore();
 	void doMeltdown();
 	bool doCheckProduction();
 

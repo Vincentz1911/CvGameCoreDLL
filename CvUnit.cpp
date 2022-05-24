@@ -746,13 +746,13 @@ void CvUnit::doTurn()
 		{
 			if (GET_TEAM(getTeam()).isOpenBorders(eTeam))
 			{
-				//Vincentz Spy
+				//Vincentz Spy -90 -25
 				testSpyIntercepted(plot()->getOwnerINLINE(), (GC.getDefineINT("ESPIONAGE_SPY_NO_INTRUDE_INTERCEPT_MOD") - evasionProbability()));
 			}
 			else
 			{
 				testSpyIntercepted(plot()->getOwnerINLINE(), (GC.getDefineINT("ESPIONAGE_SPY_INTERCEPT_MOD") - evasionProbability()));
-				//Vincentz Spy end
+				//Vincentz Spy end -75 -25
 			}
 		}
 	}
