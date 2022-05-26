@@ -7819,10 +7819,10 @@ int CvPlayer::getGold() const
 }
 
 
-int CvPlayer::getOil() const
-{
-	return m_iOil;
-}
+//int CvPlayer::getOil() const
+//{
+//	return m_iOil;
+//}
 
 void CvPlayer::setGold(int iNewValue)
 {
