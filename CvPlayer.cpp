@@ -402,6 +402,9 @@ void CvPlayer::reset(PlayerTypes eID, bool bConstructorCall)
 	m_iTotalLand = 0;
 	m_iTotalLandScored = 0;
 	m_iGold = 0;
+	//Vincentz Oil
+	m_iOil = 0;
+	//Vincentz Oil
 	m_iGoldPerTurn = 0;
 	m_iAdvancedStartPoints = -1;
 	m_iGoldenAgeTurns = 0;
@@ -7815,6 +7818,11 @@ int CvPlayer::getGold() const
 	return m_iGold;
 }
 
+
+int CvPlayer::getOil() const
+{
+	return m_iOil;
+}
 
 void CvPlayer::setGold(int iNewValue)
 {

@@ -2639,6 +2639,10 @@ bool CvUnit::canMoveInto(const CvPlot* pPlot, bool bAttack, bool bDeclareWar, bo
 		if (!bAttack)
 		{
 			bool bValid = false;
+			//Vincentz Max Air Rebase Range Start
+			int iDistance = plotDistance(getX_INLINE(), getY_INLINE(), pPlot->getX_INLINE(), pPlot->getY_INLINE());
+			if (iDistance > airRange() * 2 || 0 == iDistance) return false;
+			//Vincentz Max Air Rebase Range End
 
 			if (pPlot->isFriendlyCity(*this, true))
 			{
@@ -6533,7 +6537,6 @@ bool CvUnit::canInfiltrate(const CvPlot* pPlot, bool bTestVisible) const
 	return true;
 }
 
-
 bool CvUnit::infiltrate()
 {
 	if (!canInfiltrate(plot()))
@@ -6554,7 +6557,6 @@ bool CvUnit::infiltrate()
 
 	return true;
 }
-
 
 bool CvUnit::canEspionage(const CvPlot* pPlot, bool bTestVisible) const
 {
@@ -6917,6 +6919,14 @@ bool CvUnit::build(BuildTypes eBuild)
 		{
 			kill(true);
 		}
+		//Vincentz Experience for Workers Start
+		else
+		{
+			int xp = GC.getBuildInfo(eBuild).getTime() / 200;
+			changeExperience(xp); //GC.getBuildInfo(eBuild).getTime()/1000
+			testPromotionReady();
+		}
+		//Vincentz Experience for Workers End
 	}
 
 	// Python Event
@@ -11712,7 +11722,12 @@ bool CvUnit::isPromotionValid(PromotionTypes ePromotion) const
 	{
 		return false;
 	}
-
+	//Vincentz Extra Air Range Check
+	if (promotionInfo.getAirRangeChange() > 0 && airRange() == 0)
+	{
+		return false;
+	}
+	//Vincentz Extra Air Range Check
 	return true;
 }
 

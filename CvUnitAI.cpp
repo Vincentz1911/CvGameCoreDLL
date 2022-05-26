@@ -6014,7 +6014,8 @@ int CvUnitAI::AI_promotionValue(PromotionTypes ePromotion)
 			(AI_getUnitAIType() == UNITAI_SETTLER_SEA) ||
 			(AI_getUnitAIType() == UNITAI_PILLAGE) ||
 			(AI_getUnitAIType() == UNITAI_ATTACK) ||
-			(AI_getUnitAIType() == UNITAI_PARADROP))
+			(AI_getUnitAIType() == UNITAI_PARADROP) ||
+			(AI_getUnitAIType() == UNITAI_WORKER)) 
 	{
 		iValue += (iTemp * 20);
 	}
@@ -6024,7 +6025,7 @@ int CvUnitAI::AI_promotionValue(PromotionTypes ePromotion)
 	}
 
 	iTemp = GC.getPromotionInfo(ePromotion).getMoveDiscountChange();
-	if (AI_getUnitAIType() == UNITAI_PILLAGE)
+	if (AI_getUnitAIType() == UNITAI_PILLAGE || (AI_getUnitAIType() == UNITAI_WORKER))
 	{
 		iValue += (iTemp * 10);
 	}

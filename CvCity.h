@@ -1196,8 +1196,9 @@ protected:
 	void doDecay();
 	void doReligion();
 	void doGreatPeople();
+	//Vincentz Pollution
 	void doPollution();
-	int getTotalYieldScore();
+	//Vincentz Pollution End
 	void doMeltdown();
 	bool doCheckProduction();
 

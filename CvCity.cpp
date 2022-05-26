@@ -1095,8 +1095,11 @@ int CvCity::getNumPlots() const
 	case 1:
 		var_city_plots = 9;
 		break;
+	case 0 : 
+		var_city_plots = 1;
+		break;
 	default:
-		var_city_plots = 0;
+		var_city_plots = 1;
 		break;
 	}
 	return(var_city_plots);
@@ -12234,12 +12237,12 @@ void CvCity::doPollution()
 	int iBestValue = 0;
 	int iI;
 
-	if (NUM_CITY_PLOTS <= 1) return;
+	if (getNumPlots() == 1) return;
 	//If unhealth x 2 > Random 100
 	int diff = badHealth(false, 0) - goodHealth();
 	if (diff * 10 < GC.getGameINLINE().getSorenRandNum(100, "Pollution Random")) return;
 	//int var_city_plots = NUM_CITY_PLOTS; // Mylon - Enhanced Sized Cities - Need to replace all instances of NUM_CITY_PLOTS
-	for (iI = 0; iI < NUM_CITY_PLOTS; iI++)
+	for (iI = 0; iI < getNumPlots(); iI++)
 	{
 		int iValue = 0;
 		pLoopPlot = getCityIndexPlot(iI);
@@ -12251,7 +12254,6 @@ void CvCity::doPollution()
 				iValue = pLoopPlot->getYield(YIELD_PRODUCTION) * 3;
 				iValue += pLoopPlot->getYield(YIELD_FOOD);
 				iValue += pLoopPlot->getYield(YIELD_COMMERCE);
-				//iValue = getTotalYieldScore();
 				if (pLoopPlot->isBeingWorked()) iValue *= 3;
 
 				if (iValue == iBestValue && GC.getGameINLINE().getSorenRandNum(10, "Pollution Random") < 5)
@@ -12276,32 +12278,10 @@ void CvCity::doPollution()
 			GC.getEVENT_MESSAGE_TIME(), szBuffer,
 			"AS2D_MELTDOWN", MESSAGE_TYPE_MINOR_EVENT,
 			ARTFILEMGR.getInterfaceArtInfo("INTERFACE_UNHEALTHY_PERSON")->getPath(),
-			(ColorTypes)GC.getInfoTypeForString("COLOR_RED"), bestPlot->getX_INLINE(), bestPlot->getY_INLINE(), true, true);
-
+			(ColorTypes)GC.getInfoTypeForString("COLOR_RED"), 
+			bestPlot->getX_INLINE(), bestPlot->getY_INLINE(), true, true);
 	}
 }
-
-int CvCity::getTotalYieldScore()
-{
-	int iValue = 0;
-
-	for (int iJ = 0; iJ < NUM_CITY_PLOTS; ++iJ)
-	{
-		if (iJ != CITY_HOME_PLOT)
-		{
-			CvPlot* pPlot = getCityIndexPlot(iJ);
-
-			if (NULL != pPlot && canWork(pPlot))
-			{
-				iValue = pPlot->getYield(YIELD_PRODUCTION) * 3;
-				iValue += pPlot->getYield(YIELD_FOOD);
-				iValue += pPlot->getYield(YIELD_COMMERCE);
-			}
-		}
-	}
-	return iValue;
-}
-
 
 void CvCity::doMeltdown()
 {

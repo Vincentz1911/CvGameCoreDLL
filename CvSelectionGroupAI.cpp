@@ -165,7 +165,7 @@ bool CvSelectionGroupAI::AI_update()
 		iTempHack++;
 		if (iTempHack > 100)
 		{
-			FAssert(false);
+			FAssert(false);//TODO Point to Infinite loop unit
 			CvUnit* pHeadUnit = getHeadUnit();
 			if (NULL != pHeadUnit)
 			{
@@ -181,6 +181,7 @@ bool CvSelectionGroupAI::AI_update()
 //Vincentz Temp fix for loop sea units
 				if (pHeadUnit->AI_getUnitAIType() == UNITAI_EXPLORE_SEA)
 				{
+					//resetPath();
 					pHeadUnit->scrap();
 				//					pHeadUnit->AI_getUnitAIType() = UNITAI_ASSAULT_SEA;
 				}
