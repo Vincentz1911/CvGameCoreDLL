@@ -5649,7 +5649,8 @@ void CvGameTextMgr::setBasicUnitHelp(CvWStringBuffer &szBuffer, UnitTypes eUnit,
 		if (GC.getUnitInfo(eUnit).getFeatureImpassable(iI))
 		{
 			CvWString szFeature;
-			TechTypes eTech = (TechTypes)GC.getUnitInfo(eUnit).getTerrainPassableTech(iI);
+			TechTypes eTech = (TechTypes)GC.getUnitInfo(eUnit).getFeaturePassableTech(iI);
+
 			if (NO_TECH == eTech)
 			{
 				szFeature.Format(L"<link=literal>%s</link>", GC.getFeatureInfo((FeatureTypes)iI).getDescription());
@@ -13757,6 +13758,27 @@ void CvGameTextMgr::setEspionageCostHelp(CvWStringBuffer &szBuffer, EspionageMis
 		}
 	}
 
+	if (kMission.getStealOil() > 0)
+	{
+		if (NO_PLAYER != eTargetPlayer)
+		{
+			int iNumTotalOil = (GET_PLAYER(eTargetPlayer).getOil() * kMission.getStealOil()) / 100;
+
+			if (NULL != pPlot)
+			{
+				CvCity* pCity = pPlot->getPlotCity();
+
+				if (NULL != pCity)
+				{
+					iNumTotalOil *= pCity->getPopulation();
+					iNumTotalOil /= std::max(1, GET_PLAYER(eTargetPlayer).getTotalPopulation());
+				}
+			}
+
+			szBuffer.append(gDLL->getText("TXT_KEY_ESPIONAGE_HELP_STEAL_OIL", iNumTotalOil, GET_PLAYER(eTargetPlayer).getCivilizationAdjectiveKey()));
+			szBuffer.append(NEWLINE);
+		}
+	}
 	if (kMission.getBuyTechCostFactor() > 0)
 	{
 		szBuffer.append(gDLL->getText("TXT_KEY_ESPIONAGE_HELP_STEAL_TECH", GC.getTechInfo((TechTypes)iExtraData).getTextKeyWide()));

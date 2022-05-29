@@ -188,6 +188,10 @@ public:
 	int getTotalLand();
 	int getTotalLandScored();
 
+	//Vincentz Oil
+	int getOil();
+	int getOilPerTurn();
+	//Vincentz Oil End
 	int getGold();
 	void setGold(int iNewValue);
 	void changeGold(int iChange);

@@ -176,6 +176,8 @@ void CyPlayerPythonInterface1(python::class_<CyPlayer>& x)
 
 		.def("getTotalLand", &CyPlayer::getTotalLand, "int ()")
 		.def("getTotalLandScored", &CyPlayer::getTotalLandScored, "int ()")
+		.def("getOil", &CyPlayer::getOil, "int ()")
+		.def("getOilPerTurn", &CyPlayer::getOilPerTurn, "int ()")
 		.def("getGold", &CyPlayer::getGold, "int ()")
 		.def("setGold", &CyPlayer::setGold, "void (int iNewValue)")
 		.def("changeGold", &CyPlayer::changeGold, "void (int iChange)")

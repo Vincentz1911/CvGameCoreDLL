@@ -285,7 +285,15 @@ public:
 	int getTotalLandScored() const;																																				// Exposed to Python
 	void changeTotalLandScored(int iChange);
 
-	DllExport int getGold() const;																																				// Exposed to Python
+	//Vincentz Oil
+	DllExport int getOil() const;
+	DllExport void setOil(int iNewValue);
+	DllExport void changeOil(int iChange);
+	DllExport int getOilPerTurn() const;
+	//Vincentz Oil End
+
+	// Exposed to Python
+	DllExport int getGold() const;
 	DllExport void setGold(int iNewValue);																													// Exposed to Python
 	DllExport void changeGold(int iChange);																													// Exposed to Python
 
@@ -1068,6 +1076,10 @@ protected:
 	int m_iTotalPopulation;
 	int m_iTotalLand;
 	int m_iTotalLandScored;
+	//Vincentz Oil
+	int m_iOil;
+	int m_iOilPerTurn;
+	//Vincentz Oil End
 	int m_iGold;
 	int m_iGoldPerTurn;
 	int m_iAdvancedStartPoints;
@@ -1274,6 +1286,8 @@ protected:
 	CvTurnScoreMap m_mapPowerHistory;
 	CvTurnScoreMap m_mapCultureHistory;
 	CvTurnScoreMap m_mapEspionageHistory;
+
+	void doOil();
 
 	void doGold();
 	void doResearch();

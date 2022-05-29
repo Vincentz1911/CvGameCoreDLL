@@ -752,6 +752,17 @@ int CyPlayer::getTotalLandScored()
 	return m_pPlayer ? m_pPlayer->getTotalLandScored() : -1;
 }
 
+//Vincentz Oil
+int CyPlayer::getOil()
+{
+	return m_pPlayer ? m_pPlayer->getOil() : -1;
+}
+
+int CyPlayer::getOilPerTurn()
+{
+	return m_pPlayer ? m_pPlayer->getOilPerTurn() : -1;
+}
+//Vincentz Oil End
 int CyPlayer::getGold() 
 {
 	return m_pPlayer ? m_pPlayer->getGold() : -1;

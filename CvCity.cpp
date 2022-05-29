@@ -2201,6 +2201,8 @@ bool CvCity::canCreate(ProjectTypes eProject, bool bContinue, bool bTestVisible)
 
 bool CvCity::canMaintain(ProcessTypes eProcess, bool bContinue) const
 {
+	//TODO CHECK FOR BETTER PROCESS OF SAME TYPE
+
 	CyCity* pyCity = new CyCity((CvCity*)this);
 	CyArgsList argsList;
 	argsList.add(gDLL->getPythonIFace()->makePythonObject(pyCity));	// pass in city class
@@ -12238,10 +12240,9 @@ void CvCity::doPollution()
 	int iI;
 
 	if (getNumPlots() == 1) return;
-	//If unhealth x 2 > Random 100
 	int diff = badHealth(false, 0) - goodHealth();
-	if (diff * 10 < GC.getGameINLINE().getSorenRandNum(100, "Pollution Random")) return;
-	//int var_city_plots = NUM_CITY_PLOTS; // Mylon - Enhanced Sized Cities - Need to replace all instances of NUM_CITY_PLOTS
+	int handicap = GC.getHandicapInfo(GC.getGameINLINE().getHandicapType()).getHealthBonus();
+	if (diff < GC.getGameINLINE().getSorenRandNum(100 * handicap, "Pollution Random")) return;
 	for (iI = 0; iI < getNumPlots(); iI++)
 	{
 		int iValue = 0;

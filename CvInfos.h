@@ -6291,6 +6291,9 @@ public:
 	int getBuyUnitCostFactor() const;
 	int getBuyCityCostFactor() const;
 	int getStealTreasuryTypes() const;
+	//Vincentz Oil
+	int getStealOil() const;
+	//Vincentz Oil
 	int getCityInsertCultureAmountFactor() const;
 	int getCityInsertCultureCostFactor() const;
 	int getCityPoisonWaterCounter() const;
@@ -6330,6 +6333,9 @@ protected:
 	int m_iBuyUnitCostFactor;
 	int m_iBuyCityCostFactor;
 	int m_iStealTreasuryTypes;
+	//Vincentz Oil
+	int m_iStealOil;
+	//Vincentz Oil
 	int m_iCityInsertCultureAmountFactor;
 	int m_iCityInsertCultureCostFactor;
 	int m_iCityPoisonWaterCounter;

@@ -280,6 +280,16 @@ bool CvXMLLoadUtility::SetPostGlobalsGlobalDefines()
 		GC.getDefinesVarSystem()->SetValue("POLL_FEATURE", idx);
 		//Vincentz pollution END
 
+		//Vincentz Oil
+		SetGlobalDefine("OIL_BONUS", szVal);
+		idx = FindInInfoClass(szVal);
+		GC.getDefinesVarSystem()->SetValue("OIL_BONUS", idx);
+		
+		SetGlobalDefine("FUEL_BONUS", szVal);
+		idx = FindInInfoClass(szVal);
+		GC.getDefinesVarSystem()->SetValue("FUEL_BONUS", idx);
+		//Vincentz Oil
+
 		SetGlobalDefine("GLOBAL_WARMING_TERRAIN", szVal);
 		idx = FindInInfoClass(szVal);
 		GC.getDefinesVarSystem()->SetValue("GLOBAL_WARMING_TERRAIN", idx);

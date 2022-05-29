@@ -22789,7 +22789,12 @@ int CvEspionageMissionInfo::getStealTreasuryTypes() const
 {
 	return m_iStealTreasuryTypes;
 }
-
+//Vincentz Oil
+int CvEspionageMissionInfo::getStealOil() const
+{
+	return m_iStealOil;
+}
+//Vincentz Oil
 int CvEspionageMissionInfo::getCityInsertCultureAmountFactor() const
 {
 	return m_iCityInsertCultureAmountFactor;
@@ -22881,6 +22886,9 @@ bool CvEspionageMissionInfo::read(CvXMLLoadUtility* pXML)
 	pXML->GetChildXmlValByName(&m_iBuyUnitCostFactor, "iBuyUnitCostFactor");
 	pXML->GetChildXmlValByName(&m_iBuyCityCostFactor, "iBuyCityCostFactor");
 	pXML->GetChildXmlValByName(&m_iStealTreasuryTypes, "iStealTreasuryTypes");
+	//Vincentz Oil
+	pXML->GetChildXmlValByName(&m_iStealOil, "iStealOil");
+	//Vincentz Oil
 	pXML->GetChildXmlValByName(&m_iCityInsertCultureAmountFactor, "iCityInsertCultureAmountFactor");
 	pXML->GetChildXmlValByName(&m_iCityInsertCultureCostFactor, "iCityInsertCultureCostFactor");
 	pXML->GetChildXmlValByName(&m_iCityPoisonWaterCounter, "iCityPoisonWaterCounter");

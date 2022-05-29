@@ -401,10 +401,11 @@ void CvPlayer::reset(PlayerTypes eID, bool bConstructorCall)
 	m_iTotalPopulation = 0;
 	m_iTotalLand = 0;
 	m_iTotalLandScored = 0;
-	m_iGold = 0;
 	//Vincentz Oil
 	m_iOil = 0;
+	m_iOilPerTurn = 0;
 	//Vincentz Oil
+	m_iGold = 0;
 	m_iGoldPerTurn = 0;
 	m_iAdvancedStartPoints = -1;
 	m_iGoldenAgeTurns = 0;
@@ -713,7 +714,7 @@ void CvPlayer::reset(PlayerTypes eID, bool bConstructorCall)
 
 		FAssertMsg(0 < GC.getNumSpecialistInfos(), "GC.getNumSpecialistInfos() is not greater than zero but it is used to allocate memory in CvPlayer::reset");
 		FAssertMsg(m_ppaaiSpecialistExtraYield == NULL, "about to leak memory, CvPlayer::m_ppaaiSpecialistExtraYield");
-		m_ppaaiSpecialistExtraYield = new int*[GC.getNumSpecialistInfos()];
+		m_ppaaiSpecialistExtraYield = new int* [GC.getNumSpecialistInfos()];
 		for (iI = 0; iI < GC.getNumSpecialistInfos(); iI++)
 		{
 			m_ppaaiSpecialistExtraYield[iI] = new int[NUM_YIELD_TYPES];
@@ -729,7 +730,7 @@ void CvPlayer::reset(PlayerTypes eID, bool bConstructorCall)
 		/*************************************************************************************************/
 		FAssertMsg(0 < GC.getNumSpecialistInfos(), "GC.getNumSpecialistInfos() is not greater than zero but it is used to allocate memory in CvPlayer::reset");
 		FAssertMsg(m_ppaaiSpecialistCivicExtraCommerce == NULL, "about to leak memory, CvPlayer::m_ppaaiSpecialistCivicExtraCommerce");
-		m_ppaaiSpecialistCivicExtraCommerce = new int*[GC.getNumSpecialistInfos()];
+		m_ppaaiSpecialistCivicExtraCommerce = new int* [GC.getNumSpecialistInfos()];
 		for (iI = 0; iI < GC.getNumSpecialistInfos(); iI++)
 		{
 			m_ppaaiSpecialistCivicExtraCommerce[iI] = new int[NUM_COMMERCE_TYPES];
@@ -742,7 +743,7 @@ void CvPlayer::reset(PlayerTypes eID, bool bConstructorCall)
 		/**	CMEDIT: End																					**/
 		/*************************************************************************************************/
 		FAssertMsg(m_ppaaiImprovementYieldChange == NULL, "about to leak memory, CvPlayer::m_ppaaiImprovementYieldChange");
-		m_ppaaiImprovementYieldChange = new int*[GC.getNumImprovementInfos()];
+		m_ppaaiImprovementYieldChange = new int* [GC.getNumImprovementInfos()];
 		for (iI = 0; iI < GC.getNumImprovementInfos(); iI++)
 		{
 			m_ppaaiImprovementYieldChange[iI] = new int[NUM_YIELD_TYPES];
@@ -1148,7 +1149,7 @@ int CvPlayer::findStartingArea() const
 	int iValue;
 	int iLoop = 0;
 
-	CvArea *pLoopArea = NULL;
+	CvArea* pLoopArea = NULL;
 
 	// find best land area
 	for (pLoopArea = GC.getMapINLINE().firstArea(&iLoop); pLoopArea != NULL; pLoopArea = GC.getMapINLINE().nextArea(&iLoop))
@@ -1192,7 +1193,7 @@ CvPlot* CvPlayer::findStartingPlot(bool bRandomize)
 	{
 		if (!gDLL->getPythonIFace()->pythonUsingDefaultImpl()) // Python override
 		{
-			CvPlot *pPlot = GC.getMapINLINE().plotByIndexINLINE(result);
+			CvPlot* pPlot = GC.getMapINLINE().plotByIndexINLINE(result);
 			if (pPlot != NULL)
 			{
 				return pPlot;
@@ -1229,7 +1230,7 @@ CvPlot* CvPlayer::findStartingPlot(bool bRandomize)
 	iRange = startingPlotRange();
 	for (int iPass = 0; iPass < GC.getMapINLINE().maxPlotDistance(); iPass++)
 	{
-		CvPlot *pBestPlot = NULL;
+		CvPlot* pBestPlot = NULL;
 		int iBestValue = 0;
 
 		for (iI = 0; iI < GC.getMapINLINE().numPlotsINLINE(); iI++)
@@ -1820,7 +1821,7 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bTrade, bool b
 	// Forcing events that deal with the old city not to expire just because we conquered that city
 	for (CvEventMap::iterator it = m_mapEventsOccured.begin(); it != m_mapEventsOccured.end(); ++it)
 	{
-		EventTriggeredData &triggerData = it->second;
+		EventTriggeredData& triggerData = it->second;
 		if ((triggerData.m_eOtherPlayer == eOldOwner) && (triggerData.m_iOtherPlayerCityId == iOldCityId))
 		{
 			triggerData.m_iOtherPlayerCityId = -1;
@@ -2613,6 +2614,9 @@ void CvPlayer::doTurn()
 	verifyGoldCommercePercent();
 
 	doGold();
+
+	//Vincentz Oil
+	doOil();
 
 	doResearch();
 
@@ -3601,7 +3605,7 @@ bool CvPlayer::canContact(PlayerTypes ePlayer) const
 	//}
 	//Vincentz Peace after Writing START
 
-	if (GC.getGameINLINE().isOption(GAMEOPTION_WAR_BEFORE_WRITING)) 
+	if (GC.getGameINLINE().isOption(GAMEOPTION_WAR_BEFORE_WRITING))
 	{
 		if (!GET_TEAM(getTeam()).isOpenBordersTrading() || !GET_TEAM(GET_PLAYER(ePlayer).getTeam()).isOpenBordersTrading())
 		{
@@ -3927,7 +3931,7 @@ bool CvPlayer::canReceiveTradeCity() const
 
 bool CvPlayer::canTradeItem(PlayerTypes eWhoTo, TradeData item, bool bTestDenial) const
 {
-	CvCity *pOurCapitalCity;
+	CvCity* pOurCapitalCity;
 
 	if (bTestDenial)
 	{
@@ -5511,7 +5515,7 @@ bool CvPlayer::canConstruct(BuildingTypes eBuilding, bool bContinue, bool bTestV
 		return false;
 	}
 
-	CvCivilizationInfo &civilizationInfo = GC.getCivilizationInfo(getCivilizationType());
+	CvCivilizationInfo& civilizationInfo = GC.getCivilizationInfo(getCivilizationType());
 	int numBuildingClassInfos = GC.getNumBuildingClassInfos();
 	for (iI = 0; iI < numBuildingClassInfos; iI++)
 	{
@@ -5688,6 +5692,10 @@ bool CvPlayer::canMaintain(ProcessTypes eProcess, bool bContinue) const
 	{
 		return false;
 	}
+
+	//TODO Check if better process
+
+	//if (GC.getProcessInfo(eProcess).)
 
 	return true;
 }
@@ -7813,16 +7821,46 @@ void CvPlayer::changeTotalLandScored(int iChange)
 }
 
 
+//Vincentz Oil start
+int CvPlayer::getOil() const
+{
+	return m_iOil;
+}
+
+void CvPlayer::setOil(int iNewValue)
+{
+	if (getOil() != iNewValue)
+	{
+		m_iOil = iNewValue;
+
+		if (getID() == GC.getGameINLINE().getActivePlayer())
+		{
+			gDLL->getInterfaceIFace()->setDirty(MiscButtons_DIRTY_BIT, true);
+			gDLL->getInterfaceIFace()->setDirty(SelectionButtons_DIRTY_BIT, true);
+			gDLL->getInterfaceIFace()->setDirty(GameData_DIRTY_BIT, true);
+		}
+	}
+}
+
+void CvPlayer::changeOil(int iChange)
+{
+	setOil(getOil() + iChange);
+}
+
+int CvPlayer::getOilPerTurn() const
+{
+	return (GC.getDefineINT("FUEL_PER_OIL") + 
+		GC.getHandicapInfo(GC.getGameINLINE().getHandicapType()).getFreeUnits()) *
+		(getNumAvailableBonuses((BonusTypes)GC.getDefineINT("OIL_BONUS")) + 
+			getNumAvailableBonuses((BonusTypes)GC.getDefineINT("FUEL_BONUS")));
+}
+
+//Vincentz Oil end
+
 int CvPlayer::getGold() const
 {
 	return m_iGold;
 }
-
-
-//int CvPlayer::getOil() const
-//{
-//	return m_iOil;
-//}
 
 void CvPlayer::setGold(int iNewValue)
 {
@@ -7953,8 +7991,8 @@ void CvPlayer::changeGoldenAgeTurns(int iChange)
 int CvPlayer::getGoldenAgeLength() const
 {
 	// Vincentz Extra Random Goldenage
-	return (((GC.getGameINLINE().getSorenRandNum((GC.getGameINLINE().goldenAgeLength() 
-		* std::max(0, 100 + getGoldenAgeModifier())) / 100, "Some Log Message")) / 2) 
+	return (((GC.getGameINLINE().getSorenRandNum((GC.getGameINLINE().goldenAgeLength()
+		* std::max(0, 100 + getGoldenAgeModifier())) / 100, "Some Log Message")) / 2)
 		+ (((GC.getGameINLINE().goldenAgeLength() * std::max(0, 100 + getGoldenAgeModifier())) / 100) / 2));
 }
 
@@ -9549,7 +9587,7 @@ void CvPlayer::setCombatExperience(int iExperience)
 		//MOD@CombatXPFromBarbs-start1/1
 		//Original code: if (!isBarbarian())
 		if ((GC.getXP_FROM_BARBARIAN() > 1) || !isBarbarian())
-		//MOD@CombatXPFromBarbs-end1/1
+			//MOD@CombatXPFromBarbs-end1/1
 		{
 			int iExperienceThreshold = greatPeopleThreshold(true);
 			if (m_iCombatExperience >= iExperienceThreshold && iExperienceThreshold > 0)
@@ -12309,13 +12347,13 @@ CLLNode<CvWString>* CvPlayer::headCityNameNode() const
 }
 
 
-CvPlotGroup* CvPlayer::firstPlotGroup(int *pIterIdx, bool bRev) const
+CvPlotGroup* CvPlayer::firstPlotGroup(int* pIterIdx, bool bRev) const
 {
 	return !bRev ? m_plotGroups.beginIter(pIterIdx) : m_plotGroups.endIter(pIterIdx);
 }
 
 
-CvPlotGroup* CvPlayer::nextPlotGroup(int *pIterIdx, bool bRev) const
+CvPlotGroup* CvPlayer::nextPlotGroup(int* pIterIdx, bool bRev) const
 {
 	return !bRev ? m_plotGroups.nextIter(pIterIdx) : m_plotGroups.prevIter(pIterIdx);
 }
@@ -12329,13 +12367,13 @@ int CvPlayer::getNumPlotGroups() const
 
 CvPlotGroup* CvPlayer::getPlotGroup(int iID) const
 {
-	return((CvPlotGroup *)(m_plotGroups.getAt(iID)));
+	return((CvPlotGroup*)(m_plotGroups.getAt(iID)));
 }
 
 
 CvPlotGroup* CvPlayer::addPlotGroup()
 {
-	return((CvPlotGroup *)(m_plotGroups.add()));
+	return((CvPlotGroup*)(m_plotGroups.add()));
 }
 
 
@@ -12345,13 +12383,13 @@ void CvPlayer::deletePlotGroup(int iID)
 }
 
 
-CvCity* CvPlayer::firstCity(int *pIterIdx, bool bRev) const
+CvCity* CvPlayer::firstCity(int* pIterIdx, bool bRev) const
 {
 	return !bRev ? m_cities.beginIter(pIterIdx) : m_cities.endIter(pIterIdx);
 }
 
 
-CvCity* CvPlayer::nextCity(int *pIterIdx, bool bRev) const
+CvCity* CvPlayer::nextCity(int* pIterIdx, bool bRev) const
 {
 	return !bRev ? m_cities.nextIter(pIterIdx) : m_cities.prevIter(pIterIdx);
 }
@@ -12381,13 +12419,13 @@ void CvPlayer::deleteCity(int iID)
 }
 
 
-CvUnit* CvPlayer::firstUnit(int *pIterIdx, bool bRev) const
+CvUnit* CvPlayer::firstUnit(int* pIterIdx, bool bRev) const
 {
 	return !bRev ? m_units.beginIter(pIterIdx) : m_units.endIter(pIterIdx);
 }
 
 
-CvUnit* CvPlayer::nextUnit(int *pIterIdx, bool bRev) const
+CvUnit* CvPlayer::nextUnit(int* pIterIdx, bool bRev) const
 {
 	return !bRev ? m_units.nextIter(pIterIdx) : m_units.prevIter(pIterIdx);
 }
@@ -12417,13 +12455,13 @@ void CvPlayer::deleteUnit(int iID)
 }
 
 
-CvSelectionGroup* CvPlayer::firstSelectionGroup(int *pIterIdx, bool bRev) const
+CvSelectionGroup* CvPlayer::firstSelectionGroup(int* pIterIdx, bool bRev) const
 {
 	return !bRev ? m_selectionGroups.beginIter(pIterIdx) : m_selectionGroups.endIter(pIterIdx);
 }
 
 
-CvSelectionGroup* CvPlayer::nextSelectionGroup(int *pIterIdx, bool bRev) const
+CvSelectionGroup* CvPlayer::nextSelectionGroup(int* pIterIdx, bool bRev) const
 {
 	return !bRev ? m_selectionGroups.nextIter(pIterIdx) : m_selectionGroups.prevIter(pIterIdx);
 }
@@ -12437,13 +12475,13 @@ int CvPlayer::getNumSelectionGroups() const
 
 CvSelectionGroup* CvPlayer::getSelectionGroup(int iID) const
 {
-	return ((CvSelectionGroup *)(m_selectionGroups.getAt(iID)));
+	return ((CvSelectionGroup*)(m_selectionGroups.getAt(iID)));
 }
 
 
 CvSelectionGroup* CvPlayer::addSelectionGroup()
 {
-	return ((CvSelectionGroup *)(m_selectionGroups.add()));
+	return ((CvSelectionGroup*)(m_selectionGroups.add()));
 }
 
 
@@ -12454,12 +12492,12 @@ void CvPlayer::deleteSelectionGroup(int iID)
 	FAssertMsg(bRemoved, "could not find group, delete failed");
 }
 
-EventTriggeredData* CvPlayer::firstEventTriggered(int *pIterIdx, bool bRev) const
+EventTriggeredData* CvPlayer::firstEventTriggered(int* pIterIdx, bool bRev) const
 {
 	return !bRev ? m_eventsTriggered.beginIter(pIterIdx) : m_eventsTriggered.endIter(pIterIdx);
 }
 
-EventTriggeredData* CvPlayer::nextEventTriggered(int *pIterIdx, bool bRev) const
+EventTriggeredData* CvPlayer::nextEventTriggered(int* pIterIdx, bool bRev) const
 {
 	return !bRev ? m_eventsTriggered.nextIter(pIterIdx) : m_eventsTriggered.prevIter(pIterIdx);
 }
@@ -12792,6 +12830,15 @@ void CvPlayer::setSmtpHost(const char* szHost)
 }
 
 // Protected Functions...
+//Vincentz Oil
+void CvPlayer::doOil()
+{
+	changeOil(getOilPerTurn());
+	if (getOil() < 0) setOil(0);
+
+	CvWString szBuffer = gDLL->getText("TXT_KEY_OIL_RESERVE", getOil());
+	gDLL->getInterfaceIFace()->addMessage(getID(), true, GC.getEVENT_MESSAGE_TIME(), szBuffer, "AS2D_POSITIVE_DINK", MESSAGE_TYPE_INFO);
+}
 
 void CvPlayer::doGold()
 {
@@ -13075,8 +13122,8 @@ bool CvPlayer::canDoEspionageMission(EspionageMissionTypes eMission, PlayerTypes
 		//Vincentz NewSpy
 		//		int iEspionagePoints = GET_TEAM(getTeam()).getEspionagePointsAgainstTeam(GET_PLAYER(eTargetPlayer).getTeam());
 		int iEspionagePoints = 0;
-		if (kMission.isPassive()) 
-			iEspionagePoints = GET_TEAM(getTeam()).getEspionagePointsAgainstTeam(GET_PLAYER(eTargetPlayer).getTeam());		
+		if (kMission.isPassive())
+			iEspionagePoints = GET_TEAM(getTeam()).getEspionagePointsAgainstTeam(GET_PLAYER(eTargetPlayer).getTeam());
 		else iEspionagePoints = GET_TEAM(getTeam()).getEspionagePointsEver();
 
 		if (iEspionagePoints < iCost)
@@ -13166,6 +13213,22 @@ int CvPlayer::getEspionageMissionBaseCost(EspionageMissionTypes eMission, Player
 			iMissionCost = (iBaseMissionCost * iNumTotalGold) / 100;
 		}
 	}
+	else if (kMission.getStealOil() > 0)
+	{
+		// Steal Treasury
+		int iNumTotalOil = (GET_PLAYER(eTargetPlayer).getOil() * kMission.getStealOil()) / 100;
+
+		if (NULL != pCity)
+		{
+			iNumTotalOil *= pCity->getPopulation();
+			iNumTotalOil /= std::max(1, GET_PLAYER(eTargetPlayer).getTotalPopulation());
+		}
+
+		if (iNumTotalOil > 0)
+		{
+			iMissionCost = (iBaseMissionCost * iNumTotalOil) / 100;
+		}
+	}
 	else if (kMission.getBuyTechCostFactor() > 0)
 	{
 		// Buy (Steal) Tech
@@ -13180,9 +13243,9 @@ int CvPlayer::getEspionageMissionBaseCost(EspionageMissionTypes eMission, Player
 				{
 					//Vincentz StealTech
 					//int iCost = GET_TEAM(getTeam()).getResearchCost((TechTypes)iTech);
-					int iCost = GET_TEAM(getTeam()).getResearchCost((TechTypes)iTech) - 
+					int iCost = GET_TEAM(getTeam()).getResearchCost((TechTypes)iTech) -
 						GET_TEAM(getTeam()).getResearchProgress((TechTypes)iTech);
-					
+
 					if (iCost < iProdCost)
 					{
 						iProdCost = iCost;
@@ -13439,7 +13502,7 @@ int CvPlayer::getEspionageMissionBaseCost(EspionageMissionTypes eMission, Player
 		// Insert Culture into City
 		if (NULL != pPlot && pPlot->getCulture(getID()) > 0)
 		{
-			int iCultureAmount = kMission.getCityInsertCultureAmountFactor() *  pCity->countTotalCultureTimes100();
+			int iCultureAmount = kMission.getCityInsertCultureAmountFactor() * pCity->countTotalCultureTimes100();
 			iCultureAmount /= 10000;
 			iCultureAmount = std::max(1, iCultureAmount);
 			iMissionCost = iBaseMissionCost + (kMission.getCityInsertCultureCostFactor() * iCultureAmount) / 100;
@@ -13947,6 +14010,35 @@ bool CvPlayer::doEspionageMission(EspionageMissionTypes eMission, PlayerTypes eT
 		}
 	}
 
+	//Vincentz Oil
+	if (kMission.getStealOil() > 0)
+	{
+		if (NO_PLAYER != eTargetPlayer)
+		{
+			//Vincentz NewSpy (/100 to /10)
+			int iNumTotalOil = (GET_PLAYER(eTargetPlayer).getOil() * kMission.getStealOil()) / 10;
+
+			if (NULL != pPlot)
+			{
+				CvCity* pCity = pPlot->getPlotCity();
+
+				if (NULL != pCity)
+				{
+					iNumTotalOil *= pCity->getPopulation();
+					iNumTotalOil /= std::max(1, GET_PLAYER(eTargetPlayer).getTotalPopulation());
+				}
+			}
+
+			szBuffer = gDLL->getText("TXT_KEY_ESPIONAGE_TARGET_STEAL_OIL").GetCString();
+			changeOil(iNumTotalOil);
+			if (NO_PLAYER != eTargetPlayer)
+			{
+				GET_PLAYER(eTargetPlayer).changeOil(-iNumTotalOil);
+			}
+
+			bSomethingHappened = true;
+		}
+	}
 	//////////////////////////////
 	// Buy (Steal) Tech
 
@@ -15651,7 +15743,7 @@ void CvPlayer::doWarnings()
 			{
 				if (pLoopPlot->isVisible(getTeam(), false))
 				{
-					CvUnit *pUnit = pLoopPlot->getVisibleEnemyDefender(getID());
+					CvUnit* pUnit = pLoopPlot->getVisibleEnemyDefender(getID());
 					if (pUnit != NULL)
 					{
 						if (!pUnit->isAnimal())
@@ -15855,6 +15947,10 @@ void CvPlayer::read(FDataStreamBase* pStream)
 	pStream->Read(&m_iTotalPopulation);
 	pStream->Read(&m_iTotalLand);
 	pStream->Read(&m_iTotalLandScored);
+	//Vincentz Oil
+	pStream->Read(&m_iOil);
+	pStream->Read(&m_iOilPerTurn);
+	//Vincentz Oil End
 	pStream->Read(&m_iGold);
 	pStream->Read(&m_iGoldPerTurn);
 	pStream->Read(&m_iAdvancedStartPoints);
@@ -16331,6 +16427,10 @@ void CvPlayer::write(FDataStreamBase* pStream)
 	pStream->Write(m_iTotalPopulation);
 	pStream->Write(m_iTotalLand);
 	pStream->Write(m_iTotalLandScored);
+	//Vincentz Oil
+	pStream->Write(m_iOil);
+	pStream->Write(m_iOilPerTurn);
+	//Vincentz Oil End
 	pStream->Write(m_iGold);
 	pStream->Write(m_iGoldPerTurn);
 	pStream->Write(m_iAdvancedStartPoints);
@@ -19903,7 +20003,7 @@ void CvPlayer::launch(VictoryTypes eVictory)
 
 	kTeam.setCanLaunch(eVictory, false);
 
-	CvCity *capital = getCapitalCity();
+	CvCity* capital = getCapitalCity();
 
 	//message
 	CvWString szBuffer;
